@@ -35,16 +35,21 @@ export default class Compiler {
         const dir = name.slice(2);
         const exp = attr.value;
 
-        this[dir] && this[dir](node, exp);
+        this.update(node, exp, dir)
       }
     })
   }
 
-  text(node, exp) {
+  update(node, exp, action) {
+    const fnName = `${action}Update`
+    this[fnName] && this[fnName](node, exp)
+  }
+
+  textUpdate(node, exp) {
     node.textContent = this.$vm[exp];
   }
 
-  html(node, exp) {
+  htmlUpdate(node, exp) {
     node.innerHTML = this.$vm[exp];
   }
 
@@ -57,6 +62,6 @@ export default class Compiler {
   }
 
   compileText(node) {
-    node.textContent = this.$vm[RegExp.$1]
+    this.update(node, RegExp.$1, 'text')
   }
 }
