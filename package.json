@@ -1,0 +1,12 @@
+{
+  "name": "root",
+  "private": true,
+  "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^19.0.2",
+    "lerna": "^4.0.0",
+    "prettier": "^1.9.1",
+    "prettier-eslint": "^10.1.0"
+  }
+}
