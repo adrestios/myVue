@@ -34,12 +34,16 @@ function defineProperty(obj, key, val) {
   Object.defineProperty(obj, key, {
     get: function() {
       console.log("get: key-" + key + "value-" + val);
+      if(Dep.target) {
+        dep.addDeps(Dep.target);
+      }
       return val;
     },
     set: function(v) {
       if (v !== val) {
         console.log("set: key-" + key + "value-" + v);
         val = v;
+        dep.notify()
       }
     }
   });

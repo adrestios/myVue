@@ -49,8 +49,8 @@ export default class Compiler {
     fn && fn(node, this.$vm[exp])
 
     // update
-    new Watcher(this.$vm, exp, (val) => {
-      fn && fn(node, exp, val)
+    new Watcher(this.$vm, exp, function(val) {
+      fn && fn(node, val)
     })
   }
 
