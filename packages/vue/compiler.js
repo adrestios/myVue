@@ -46,7 +46,7 @@ export default class Compiler {
     const fnName = `${action}Update`
     const fn = this[fnName]
     // init
-    fn && fn(node, exp)
+    fn && fn(node, this.$vm[exp])
 
     // update
     new Watcher(this.$vm, exp, (val) => {
@@ -54,12 +54,12 @@ export default class Compiler {
     })
   }
 
-  textUpdate(node, exp) {
-    node.textContent = this.$vm[exp];
+  textUpdate(node, val) {
+    node.textContent = val;
   }
 
-  htmlUpdate(node, exp) {
-    node.innerHTML = this.$vm[exp];
+  htmlUpdate(node, val) {
+    node.innerHTML = val;
   }
 
   isStartsWithV(str) {
