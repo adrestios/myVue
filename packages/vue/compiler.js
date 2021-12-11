@@ -1,3 +1,5 @@
+import Watcher from "./watcher.js";
+
 export default class Compiler {
   constructor(el, vm) {
     this.$el = document.querySelector(el);
@@ -42,7 +44,14 @@ export default class Compiler {
 
   update(node, exp, action) {
     const fnName = `${action}Update`
-    this[fnName] && this[fnName](node, exp)
+    const fn = this[fnName]
+    // init
+    fn && fn(node, exp)
+
+    // update
+    new Watcher(this.$vm, exp, (val) => {
+      fn && fn(node, exp, val)
+    })
   }
 
   textUpdate(node, exp) {
