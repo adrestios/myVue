@@ -34,9 +34,11 @@ export default class Compiler {
       if (this.isStartsWithV(name)) {
         const dir = name.slice(2);
         const exp = attr.value;
-        console.log(name, "---name");
-        // this.update(node, exp, dir);
         this[dir] && this[dir](node, exp);
+      } else if (this.isEvent(name)) {
+        const eventName = name.slice(1);
+        const exp = attr.value;
+        this.registerEvent(node, exp, eventName);
       }
     });
   }
@@ -83,6 +85,15 @@ export default class Compiler {
 
   isStartsWithV(str) {
     return str.startsWith("v-");
+  }
+
+  isEvent(str) {
+    return str.startsWith("@");
+  }
+
+  registerEvent(node, exp, event) {
+    const fn = this.$vm[exp];
+    fn && node.addEventListener(event, fn.bind(this.$vm));
   }
 
   isInterpolation(node) {
