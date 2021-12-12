@@ -1,4 +1,5 @@
 import Watcher from "./watcher.js";
+import { getValueFromVm } from "./utils.js";
 
 export default class Compiler {
   constructor(el, vm) {
@@ -31,13 +32,12 @@ export default class Compiler {
   compileEle(node) {
     Array.from(node.attributes).forEach(attr => {
       const name = attr.name;
+      const exp = attr.value;
       if (this.isStartsWithV(name)) {
         const dir = name.slice(2);
-        const exp = attr.value;
         this[dir] && this[dir](node, exp);
       } else if (this.isEvent(name)) {
         const eventName = name.slice(1);
-        const exp = attr.value;
         this.registerEvent(node, exp, eventName);
       }
     });
@@ -63,7 +63,8 @@ export default class Compiler {
     const fnName = `${action}Update`;
     const fn = this[fnName];
     // init
-    fn && fn(node, this.$vm[exp]);
+    const value = getValueFromVm(this.$vm, exp);
+    fn && fn(node, value);
 
     // update
     new Watcher(this.$vm, exp, function(val) {
