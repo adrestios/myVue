@@ -50,7 +50,6 @@ export default class Compiler {
   }
 
   model(node, exp) {
-    console.log("mpdel");
     this.update(node, exp, "model");
 
     node.addEventListener("input", el => {
