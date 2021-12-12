@@ -42,37 +42,54 @@
       this.compile(this.$el);
     }
 
-    
     compile(el) {
       const { childNodes } = el;
       Array.from(childNodes).forEach(node => {
-        if(this.isEle(node)) {
+        if (this.isEle(node)) {
           this.compileEle(node);
 
-          if(node.childNodes && node.childNodes.length) {
+          if (node.childNodes && node.childNodes.length) {
             this.compile(node);
           }
         }
-        if(this.isInterpolation(node)) {
+        if (this.isInterpolation(node)) {
           this.compileText(node);
         }
-
       });
     }
 
     isEle(node) {
-      return node.nodeType === 1
+      return node.nodeType === 1;
     }
 
     compileEle(node) {
       Array.from(node.attributes).forEach(attr => {
         const name = attr.name;
-        if(this.isStartsWithV(name)) {
+        if (this.isStartsWithV(name)) {
           const dir = name.slice(2);
           const exp = attr.value;
-
-          this.update(node, exp, dir);
+          this[dir] && this[dir](node, exp);
+        } else if (this.isEvent(name)) {
+          const eventName = name.slice(1);
+          const exp = attr.value;
+          this.registerEvent(node, exp, eventName);
         }
+      });
+    }
+
+    text(node, exp) {
+      this.update(node, exp, "text");
+    }
+
+    html(node, exp) {
+      this.update(node, exp, "html");
+    }
+
+    model(node, exp) {
+      this.update(node, exp, "model");
+
+      node.addEventListener("input", el => {
+        this.$vm[exp] = el.target.value;
       });
     }
 
@@ -96,8 +113,21 @@
       node.innerHTML = val;
     }
 
+    modelUpdate(node, val) {
+      node.value = val;
+    }
+
     isStartsWithV(str) {
-      return str.startsWith('v-')
+      return str.startsWith("v-");
+    }
+
+    isEvent(str) {
+      return str.startsWith("@");
+    }
+
+    registerEvent(node, exp, event) {
+      const fn = this.$vm[exp];
+      fn && node.addEventListener(event, fn.bind(this.$vm));
     }
 
     isInterpolation(node) {
@@ -105,7 +135,7 @@
     }
 
     compileText(node) {
-      this.update(node, RegExp.$1, 'text');
+      this.update(node, RegExp.$1, "text");
     }
   }
 
@@ -158,6 +188,7 @@
   class Vue {
     constructor(options) {
       this.$data = options.data;
+      this.$methods = options.methods;
       this.$options = options;
 
       observe(this.$data);
@@ -169,6 +200,7 @@
   }
 
   function proxy(vm) {
+    // 代理data
     Object.keys(vm.$data).forEach(key => {
       Object.defineProperty(vm, key, {
         get: function() {
@@ -176,6 +208,23 @@
         },
         set: function(v) {
           if (v !== vm.$data[key]) {
+            vm.$data[key] = v;
+          }
+        }
+      });
+    });
+
+    // 代理method
+    Object.keys(vm.$methods).forEach(key => {
+      if (vm[key]) {
+        throw Error("方法名重名");
+      }
+      Object.defineProperty(vm, key, {
+        get: function() {
+          return vm.$methods[key];
+        },
+        set: function(v) {
+          if (v !== vm.$methods[key]) {
             vm.$data[key] = v;
           }
         }
