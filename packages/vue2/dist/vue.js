@@ -34,6 +34,21 @@
     }
   }
 
+  const getValueFromVm = (vm, exp) => {
+    const propArr = exp.split(".");
+    if ([propArr[0], propArr[propArr.length - 1]].includes("")) {
+      throw Error("插值表达式属性错误");
+    }
+    return propArr.reduce((acc, cur, idx) => {
+      const val = acc[cur];
+      if (val) {
+        return val;
+      } else {
+        throw Error(`属性${cur}不存在`);
+      }
+    }, vm);
+  };
+
   class Compiler {
     constructor(el, vm) {
       this.$el = document.querySelector(el);
@@ -65,13 +80,12 @@
     compileEle(node) {
       Array.from(node.attributes).forEach(attr => {
         const name = attr.name;
+        const exp = attr.value;
         if (this.isStartsWithV(name)) {
           const dir = name.slice(2);
-          const exp = attr.value;
           this[dir] && this[dir](node, exp);
         } else if (this.isEvent(name)) {
           const eventName = name.slice(1);
-          const exp = attr.value;
           this.registerEvent(node, exp, eventName);
         }
       });
@@ -97,7 +111,8 @@
       const fnName = `${action}Update`;
       const fn = this[fnName];
       // init
-      fn && fn(node, this.$vm[exp]);
+      const value = getValueFromVm(this.$vm, exp);
+      fn && fn(node, value);
 
       // update
       new Watcher(this.$vm, exp, function(val) {
@@ -170,7 +185,7 @@
     Object.defineProperty(obj, key, {
       get: function() {
         console.log("get: key-" + key + "value-" + val);
-        if(Dep.target) {
+        if (Dep.target) {
           dep.addDeps(Dep.target);
         }
         return val;
