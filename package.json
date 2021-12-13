@@ -1,0 +1,17 @@
+{
+  "name": "root",
+  "private": true,
+  "scripts": {
+    "clean": "lerna clean && rm -rf node_modules",
+    "boot": "npm install && lerna bootstrap --hoist",
+    "deps": "npm run clean && npm run boot"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^19.0.2",
+    "lerna": "^4.0.0",
+    "prettier": "^1.9.1",
+    "prettier-eslint": "^10.1.0"
+  }
+}
