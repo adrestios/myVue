@@ -1,6 +1,11 @@
 {
   "name": "root",
   "private": true,
+  "scripts": {
+    "clean": "lerna clean && rm -rf node_modules",
+    "boot": "npm install && lerna bootstrap --hoist",
+    "deps": "npm run clean && npm run boot"
+  },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
     "eslint": "^6.8.0",

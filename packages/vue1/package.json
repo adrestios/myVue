@@ -1,0 +1,15 @@
+{
+  "name": "@adrestios/vue1",
+  "version": "1.0.0",
+  "description": "实现一个简单的1版本的vue",
+  "main": "./dist/vue.js",
+  "scripts": {
+    "dev": "rollup -w -c scripts/config.js -m",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "rollup": "^2.61.1"
+  }
+}
