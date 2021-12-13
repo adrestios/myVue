@@ -29,12 +29,12 @@ class Observer {
 
 function defineProperty(obj, key, val) {
   observe(val);
-  const dep = new Dep()
+  const dep = new Dep();
 
   Object.defineProperty(obj, key, {
     get: function() {
       console.log("get: key-" + key + "value-" + val);
-      if(Dep.target) {
+      if (Dep.target) {
         dep.addDeps(Dep.target);
       }
       return val;
@@ -43,7 +43,7 @@ function defineProperty(obj, key, val) {
       if (v !== val) {
         console.log("set: key-" + key + "value-" + v);
         val = v;
-        dep.notify()
+        dep.notify();
       }
     }
   });
