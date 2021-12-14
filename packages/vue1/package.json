@@ -1,6 +1,6 @@
 {
   "name": "@adrestios/vue1",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "实现一个简单的1版本的vue",
   "main": "./dist/vue.js",
   "scripts": {
