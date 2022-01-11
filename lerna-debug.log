@@ -1,0 +1,7 @@
+36 error Error: Command failed with exit code 128: git tag @adrestios/vue1@1.0.1 -m @adrestios/vue1@1.0.1
+36 error fatal: tag '@adrestios/vue1@1.0.1' already exists
+36 error     at makeError (D:\code\myVue\node_modules\execa\lib\error.js:60:11)
+36 error     at handlePromise (D:\code\myVue\node_modules\execa\index.js:118:26)
+36 error     at processTicksAndRejections (node:internal/process/task_queues:96:5)
+36 error     at async Promise.all (index 0)
+36 error     at async Promise.all (index 0)
